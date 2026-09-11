@@ -4,57 +4,63 @@ on:
   workflow_dispatch:
   push:
 
+env:
+  PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: 0
+
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: "17"
+          distribution: "temurin"
 
       - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git \
-            zip \
-            unzip \
-            openjdk-17-jdk \
-            autoconf \
+          sudo apt update
+          sudo apt install -y \
             automake \
             libtool \
             libtool-bin \
+            libltdl-dev \
+            autoconf \
             pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
+            gettext \
+            autopoint \
             libffi-dev \
             libssl-dev \
+            zlib1g-dev \
             cmake \
-            gettext \
-            autopoint
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
+            git \
+            zip \
+            unzip
 
       - name: Install Buildozer
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install buildozer==1.5.0
-          pip install "cython<3.0"
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/kivy/buildozer
+          pip install legacy-cgi
+          pip install setuptools
+          pip install cython==0.29.34
 
-      - name: Clean previous build
+      - name: Prepare Android build
         run: |
-          buildozer android clean || true
-          rm -rf .buildozer
+          buildozer android p4a -- --help
 
       - name: Build APK
-        env:
-          P4A_ACCEPT_LICENSE: "1"
         run: |
-          yes | buildozer -v android debug
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
