@@ -33,12 +33,6 @@ jobs:
           pip install buildozer
           pip install "cython==0.29.34"
 
-      - name: Prepare Android SDK
-        run: |
-          mkdir -p $HOME/.buildozer/android/platform/android-sdk
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
       - name: Build APK
         run: |
           buildozer -v android debug
