@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -33,9 +33,16 @@ jobs:
           pip install buildozer
           pip install "cython==0.29.34"
 
-      - name: Build APK
+      - name: Accept Android licenses
         run: |
-          buildozer -v android debug
+          mkdir -p "$HOME/.buildozer/android/platform"
+          yes | buildozer android update || true
+
+      - name: Build APK
+        env:
+          P4A_ACCEPT_LICENSE: "1"
+        run: |
+          yes | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
