@@ -16,6 +16,8 @@ fullscreen = 0
 
 android.permissions = INTERNET
 
+p4a.branch = develop
+
 [buildozer]
 
 log_level = 2
