@@ -8,8 +8,6 @@ source.dir = .
 source.include_exts = py,png,jpg,jpeg,kv,atlas
 
 version = 1.0
-version.regex = __version__ = ['"](.*)['"]
-version.filename = %(source.dir)s/main.py
 
 requirements = python3,kivy
 
@@ -18,9 +16,17 @@ fullscreen = 0
 
 android.permissions = INTERNET
 
+# Android 5.0+
 android.minapi = 21
+
+# Android API used for building
 android.api = 34
-android.archs = arm64-v8a, armeabi-v7a
+
+# Support old 32-bit + modern 64-bit phones
+android.archs = armeabi-v7a,arm64-v8a
+
+# Accept Android SDK license
+android.accept_sdk_license = True
 
 [buildozer]
 
