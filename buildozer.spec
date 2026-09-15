@@ -32,3 +32,6 @@ android.accept_sdk_license = True
 
 log_level = 2
 warn_on_root = 0
+android.minapi = 21
+android.api = 34
+android.archs = armeabi-v7a,arm64-v8a
